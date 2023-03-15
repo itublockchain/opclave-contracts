@@ -29,6 +29,7 @@ contract BioAccount is BaseAccount {
     /// @inheritdoc BaseAccount
     function _validateSignature(UserOperation calldata userOp, bytes32 userOpHash)
         internal
+        view
         override
         returns (uint256 validationData)
     {
@@ -37,5 +38,7 @@ contract BioAccount is BaseAccount {
     }
 
     /// @inheritdoc BaseAccount
-    function _validateAndUpdateNonce(UserOperation calldata userOp) internal override {}
+    function _validateAndUpdateNonce(UserOperation calldata userOp) internal override {
+        require(_nonce++ == userOp.nonce, "account: invalid nonce");
+    }
 }
