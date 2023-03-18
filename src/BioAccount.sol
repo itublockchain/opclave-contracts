@@ -27,7 +27,7 @@ contract BioAccount is BaseAccount {
     }
 
     /**
-     * execute a transaction (called directly from owner, or by entryPoint)
+     * execute a transaction (called directly by entryPoint)
      */
     function execute(address dest, uint256 value, bytes calldata func) external {
         _requireFromEntryPoint();
