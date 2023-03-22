@@ -13,6 +13,11 @@ contract BioAccount is BaseAccount {
     uint256 public lastActiveTime;
     address public inheritor;
 
+    modifier updateLastActive() {
+        _;
+        lastActiveTime = block.timestamp;
+    }
+
     constructor(address _entryPointAddress, bytes memory _publicKey) {
         _entryPoint = IEntryPoint(_entryPointAddress);
         publicKey = _publicKey;
@@ -33,47 +38,41 @@ contract BioAccount is BaseAccount {
     /**
      * execute a transaction (called directly by entryPoint)
      */
-    function execute(address dest, uint256 value, bytes calldata func) external {
+    function execute(address dest, uint256 value, bytes calldata func) external updateLastActive {
         _requireFromEntryPoint();
         _call(dest, value, func);
-        lastActiveTime = block.timestamp;
     }
 
     /**
      * execute a sequence of transactions
      */
-    function executeBatch(address[] calldata dest, bytes[] calldata func) external {
+    function executeBatch(address[] calldata dest, bytes[] calldata func) external updateLastActive {
         _requireFromEntryPoint();
         require(dest.length == func.length, "wrong array lengths");
         for (uint256 i = 0; i < dest.length; i++) {
             _call(dest[i], 0, func[i]);
         }
-        lastActiveTime = block.timestamp;
     }
 
-    function setPublicKey(bytes calldata _publicKey) external {
+    function setPublicKey(bytes calldata _publicKey) external updateLastActive {
         _requireFromEntryPoint();
         publicKey = _publicKey;
-        lastActiveTime = block.timestamp;
     }
 
-    function setInactiveTimeLimit(uint256 _InactiveTimeLimit) external {
+    function setInactiveTimeLimit(uint256 _InactiveTimeLimit) external updateLastActive {
         _requireFromEntryPoint();
         InactiveTimeLimit = _InactiveTimeLimit;
-        lastActiveTime = block.timestamp;
     }
 
-    function setInheritor(address _inheritor) external {
+    function setInheritor(address _inheritor) external updateLastActive {
         _requireFromEntryPoint();
         inheritor = _inheritor;
-        lastActiveTime = block.timestamp;
     }
 
     function inherit() external {
         require(inheritor == msg.sender, "not inheritor");
         require(block.timestamp - lastActiveTime > InactiveTimeLimit, "not inactive");
         payable(inheritor).transfer(address(this).balance);
-        lastActiveTime = block.timestamp;
     }
 
     /// @inheritdoc BaseAccount
