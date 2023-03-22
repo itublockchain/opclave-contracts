@@ -87,18 +87,21 @@ contract BioAccount is BaseAccount {
 
         bool valid;
         assembly {
-            let ptr := mload(0x40)
-
-            mstore(ptr, add(_publicKey, 0x20))
+            let ptr := add(mload(0x40), 0x80)
+            mstore(ptr, mload(add(_publicKey, 0x20)))
+            mstore8(add(ptr, 0x20), mload(add(_publicKey, 0x21)))
             mstore(add(ptr, 0x21), userOpHash)
-            mstore(add(ptr, 0x41), _signature)
+            mstore(add(ptr, 0x41), mload(add(_signature, 0x20)))
+            mstore(add(ptr, 0x59), mload(add(_signature, 0x38)))
+            mstore(add(ptr, 0x71), mload(add(_signature, 0x50)))
 
-            if iszero(staticcall(gas(), _secp256r1, ptr, 0x61, ptr, 0x20)) { revert(0, 0) }
+            if iszero(staticcall(gas(), _secp256r1, ptr, 0x89, ptr, 0x20)) { revert(0, 0) }
 
             let size := returndatasize()
             returndatacopy(ptr, 0, size)
-            valid := byte(size, mload(ptr))
+            valid := mload(ptr)
         }
+
         validationData = _packValidationData(!valid, 0, 0);
     }
 
