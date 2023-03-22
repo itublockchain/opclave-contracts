@@ -6,12 +6,16 @@ import {Exec} from "./utils/Exec.sol";
 
 contract BioAccount is BaseAccount {
     IEntryPoint internal immutable _entryPoint;
-    bytes internal constant publicKey = "0x038eb6366f309b6bc7c76255196395e8617c72632d3690c55f";
     address internal constant secp256r1 = address(0x1773);
     uint256 private _nonce;
+    bytes public publicKey;
+    uint256 public InactiveTimeLimit;
+    uint256 public lastActiveTime;
+    address public inheritor;
 
-    constructor(address _entryPointAddress) {
+    constructor(address _entryPointAddress, bytes memory _publicKey) {
         _entryPoint = IEntryPoint(_entryPointAddress);
+        publicKey = _publicKey;
     }
 
     receive() external payable {}
@@ -32,6 +36,7 @@ contract BioAccount is BaseAccount {
     function execute(address dest, uint256 value, bytes calldata func) external {
         _requireFromEntryPoint();
         _call(dest, value, func);
+        lastActiveTime = block.timestamp;
     }
 
     /**
@@ -43,6 +48,32 @@ contract BioAccount is BaseAccount {
         for (uint256 i = 0; i < dest.length; i++) {
             _call(dest[i], 0, func[i]);
         }
+        lastActiveTime = block.timestamp;
+    }
+
+    function setPublicKey(bytes calldata _publicKey) external {
+        _requireFromEntryPoint();
+        publicKey = _publicKey;
+        lastActiveTime = block.timestamp;
+    }
+
+    function setInactiveTimeLimit(uint256 _InactiveTimeLimit) external {
+        _requireFromEntryPoint();
+        InactiveTimeLimit = _InactiveTimeLimit;
+        lastActiveTime = block.timestamp;
+    }
+
+    function setInheritor(address _inheritor) external {
+        _requireFromEntryPoint();
+        inheritor = _inheritor;
+        lastActiveTime = block.timestamp;
+    }
+
+    function inherit() external {
+        require(inheritor == msg.sender, "not inheritor");
+        require(block.timestamp - lastActiveTime > InactiveTimeLimit, "not inactive");
+        payable(inheritor).transfer(address(this).balance);
+        lastActiveTime = block.timestamp;
     }
 
     /// @inheritdoc BaseAccount
