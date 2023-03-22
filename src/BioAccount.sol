@@ -82,7 +82,24 @@ contract BioAccount is BaseAccount {
         override
         returns (uint256 validationData)
     {
-        bool valid = Exec.staticcall(secp256r1, abi.encode(publicKey, userOpHash, userOp.signature), gasleft());
+        address _secp256r1 = secp256r1;
+        bytes memory _publicKey = publicKey;
+        bytes memory _signature = userOp.signature;
+
+        bool valid;
+        assembly {
+            let ptr := mload(0x40)
+
+            mstore(ptr, add(_publicKey, 0x20))
+            mstore(add(ptr, 0x21), userOpHash)
+            mstore(add(ptr, 0x41), _signature)
+
+            if iszero(staticcall(gas(), _secp256r1, ptr, 0x61, ptr, 0x20)) { revert(0, 0) }
+
+            let size := returndatasize()
+            returndatacopy(ptr, 0, size)
+            valid := byte(size, mload(ptr))
+        }
         validationData = _packValidationData(!valid, 0, 0);
     }
 
