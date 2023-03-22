@@ -5,9 +5,9 @@ pragma solidity ^0.8.12;
 /* solhint-disable no-inline-assembly */
 /* solhint-disable reason-string */
 
-import "./interfaces/IAccount.sol";
-import "./interfaces/IEntryPoint.sol";
-import "./Helpers.sol";
+import "../interfaces/IAccount.sol";
+import "../interfaces/IEntryPoint.sol";
+import "../Helpers.sol";
 
 /**
  * Basic account implementation.

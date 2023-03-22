@@ -9,14 +9,14 @@ pragma solidity ^0.8.12;
 /* solhint-disable avoid-low-level-calls */
 /* solhint-disable no-inline-assembly */
 
-import "./interfaces/IAccount.sol";
-import "./interfaces/IPaymaster.sol";
-import "./interfaces/IEntryPoint.sol";
+import "../interfaces/IAccount.sol";
+import "../interfaces/IPaymaster.sol";
+import "../interfaces/IEntryPoint.sol";
 
 import "./utils/Exec.sol";
 import "./StakeManager.sol";
 import "./SenderCreator.sol";
-import "./Helpers.sol";
+import "../Helpers.sol";
 
 contract EntryPoint is IEntryPoint, StakeManager {
     using UserOperationLib for UserOperation;
