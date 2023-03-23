@@ -1,0 +1,35 @@
+{
+  "transactions": [
+    {
+      "hash": "0xca42617a79c650bbc5f143e5ae8634ba9c9fa33cd512373135612b6380f75913",
+      "transactionType": "CALL",
+      "contractName": null,
+      "contractAddress": "0x0000000000000000000000000000000000001773",
+      "function": null,
+      "arguments": null,
+      "rpc": "https://de30-159-146-14-133.eu.ngrok.io",
+      "transaction": {
+        "type": "0x00",
+        "from": "0x11dc744f9b69b87a1eb19c3900e0ff85b6853990",
+        "to": "0x0000000000000000000000000000000000001773",
+        "gas": "0x7d00",
+        "value": "0x1",
+        "data": "0x03acdd696a4c5b603f7115db9baa5fc58b14fb2fa133b9c1f472465e4718bfb98f62fe8625fd33bd7f48ca4561fed3c80d5d82e6c41ef0f0122d594b35924bf04e00304502200f62a197ceb328bfcacc42d4118e19823a1f281e3ff2eda1c87f2464437cc3b3022100bbcda922818ba7ee43369a71db1b9c53a5981bff39300aded68ba51b99ced6dc",
+        "nonce": "0x1"
+      },
+      "additionalContracts": [],
+      "isFixedGasLimit": false
+    }
+  ],
+  "receipts": [],
+  "libraries": [],
+  "pending": [
+    "0xca42617a79c650bbc5f143e5ae8634ba9c9fa33cd512373135612b6380f75913"
+  ],
+  "path": "/Users/tahos81/Desktop/opclave-contracts/broadcast/BioAccount.s.sol/42069/run-latest.json",
+  "returns": {},
+  "timestamp": 1679512786,
+  "chain": 42069,
+  "multi": false,
+  "commit": "a8d3ad9"
+}

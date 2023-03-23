@@ -55,7 +55,7 @@ contract BioAccountScript is Script {
             mstore(add(ptr, 0x59), mload(add(_signature, 0x38)))
             mstore(add(ptr, 0x71), mload(add(_signature, 0x50)))
 
-            if iszero(staticcall(gas(), _secp256r1, ptr, 0x89, ptr, 0x20)) { revert(0, 0) }
+            if iszero(call(gas(), _secp256r1, 0x01, ptr, 0x89, ptr, 0x20)) { revert(0, 0) }
 
             let size := returndatasize()
             returndatacopy(ptr, 0, size)
