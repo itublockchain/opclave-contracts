@@ -37,7 +37,7 @@ contract OraclePaymaster is BasePaymaster {
         address account = userOp.getSender();
         uint256 gasPriceUserOp = userOp.gasPrice();
         uint256 maxTokenCost = getTokenValueOfEth(maxCost);
-        uint256 approvedAmount = optimismToken.allowance(address(this), account);
+        uint256 approvedAmount = optimismToken.allowance(account, address(this));
         require(approvedAmount >= maxTokenCost, "Not enough approved tokens");
         return (abi.encode(account, gasPriceUserOp, maxTokenCost, maxCost), 0);
     }
